@@ -30,9 +30,26 @@
 
 .tutorial .video1{
     text-align: center;
+    position: relative;
 }
 
 .tutorial h1{
     text-align: center;
     font-size: 50px;
+    position: relative;
+}
+
+img.link2{
+    text-decoration: none;
+    color: black;
+    margin-left: 50%;
+    position: relative;
+    margin-top: 150px;
+    transform:translate(-50%,-50%);
+    font-size: 40px;
+}
+
+img.link2:hover{
+    cursor: pointer;
+    opacity: 0.5;
 }

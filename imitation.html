@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <script>
+        var video = document.getElementById("video");
+
+        navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then(function (MediaStream) {
+            video.srcObject = MediaStream;
+            video.play();
+        });
+    </script>
+</head>
+
+<body>
+    <a>ooo</a>
+    <video id="video" width="640" height="480" autoplay></video>
+</body>
+
+</html>
