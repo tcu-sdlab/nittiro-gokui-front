@@ -1,0 +1,38 @@
+.title p{
+    font-family:'Hiragino Kaku Gothic ProN';
+    font-size: 70px;
+    margin-left: 15%;
+    margin-top: 10%;
+    position: absolute;
+}
+
+.title .image_index{
+    margin-left: 60%;
+    margin-top:15%;
+    width: 500px;
+    position: absolute;
+}
+
+.title .link{
+    text-decoration: none;
+    color: black;
+    background-color: rgb(126, 204, 8);
+    font-size: 40px;
+    margin-left: 25%;
+    margin-top: 28%;
+    position: absolute;
+    padding: 15px;
+}
+
+.title .link:hover{
+    background-color: rgba(121, 190, 16, 0.726);
+}
+
+.tutorial .video1{
+    text-align: center;
+}
+
+.tutorial h1{
+    text-align: center;
+    font-size: 50px;
+}
