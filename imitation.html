@@ -3,14 +3,15 @@
 
 <head>
     <meta charset="utf-8">
+    <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 
 <body>
     <div class="camera">
-        <video id="video">Video stream not available.</video>
-    </div><br>
-    <button id="startbutton">start!!</button><button id="stopbutton">stop!!</button><button
-        id="download">download!!</button><br>
+        <video id="video">Video stream not available.</video><br>
+        <button id="startbutton">start!!</button><button id="stopbutton">stop!!</button><button
+            id="download">download!!</button><br>
+    </div>
     <div>
         <video id="test"></video>
     </div>
@@ -22,7 +23,7 @@
         let canvas = null
         let photo = null
         let startbutton = null
-        let constrains = { video: true, audio: true }
+        let constrains = { video: true, audio: false }
         let recorder = null
         let record_data = []
         /**
@@ -57,13 +58,13 @@
             })
             downloadbutton.addEventListener('click', function (ev) {
                 console.log(record_data)
-                var blob = new Blob(record_data, { type: 'video/webm' })
+                var blob = new Blob(record_data, { type: 'video/mp4' })
                 var url = window.URL.createObjectURL(blob)
                 var a = document.createElement('a')
                 document.body.appendChild(a)
                 a.style = 'display:none'
                 a.href = url;
-                a.download = 'test.webm'
+                a.download = 'test.mp4'
                 a.click()
                 window.URL.revokeObjectURL(url)
             })
@@ -89,6 +90,7 @@
                     recorder = new MediaRecorder(stream)
                     recorder.ondataavailable = function (e) {
                         var testvideo = document.getElementById('test')
+                        testvideo.style = 'display:none'
                         testvideo.setAttribute('controls', '')
                         testvideo.setAttribute('width', width)
                         testvideo.setAttribute('height', height)

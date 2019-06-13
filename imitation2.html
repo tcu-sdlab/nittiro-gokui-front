@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>VideoタグとWebカメラの映像と音声を一つのVideoタグに合成してダウンロード</title>
+    <style>
+        #video,
+        #sub_video {
+            display: none;
+        }
+
+        video,
+        canvas {
+            display: block;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 4px;
+            background-color: #1FAA3C;
+            color: white;
+            font-size: small;
+            padding: .3em 1em;
+            display: inline-block;
+        }
+
+        .mix_wrapper {
+            display: none;
+        }
+
+        body.result .rec_wrapper {
+            display: none;
+        }
+
+        body.result .mix_wrapper {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>VideoタグとWebカメラの映像と音声を一つのVideoタグに合成してダウンロード</h1>
+    <p>Chrome 56以降で試します</p>
+
+    <div class="rec_wrapper">
+        <canvas id="canvas"></canvas>
+        <button class="btn" id="rec_start">REC START （録画開始）</button>
+        <button class="btn" id="rec_stop">REC STOP （録画停止）</button>
+    </div>
+
+    <div class="mix_wrapper">
+        <video controls id="mixed_video" width="600" height="336" controls></video>
+        <a class="btn" download id="btn_download">DOWNLOAD （合成ビデオをダウンロード）</a>
+    </div>
+
+    <video src="my_video.mp4" controls id="video" width="600" height="336"></video>
+    <video id="sub_video" autoplay></video>
+    <script>
+        var video = document.getElementById("video");
+        video.oncanplay = function () {
+            var sub_video = document.getElementById("sub_video");
+            var mixed_video = document.getElementById("mixed_video");
+            var rec_start = document.getElementById("rec_start");
+            var rec_stop = document.getElementById("rec_stop");
+            var btn_download = document.getElementById("btn_download");
+            sub_video.volume = 0;
+            var canvas = document.getElementById("canvas");
+            canvas.width = video.width, canvas.height = video.height;
+            var ctx = canvas.getContext("2d");
+            var audioContext = new AudioContext();
+            var camera_stream;
+            var mediaConstraints = {
+                video: { frameRate: { ideal: 10, max: 15 } }, audio: { echoCancellation: true }
+            };
+            navigator.getUserMedia(mediaConstraints, onSuccess, onFail);
+
+            (function video2Canvas() {
+                ctx.drawImage(video, 0, 0)
+                ctx.drawImage(sub_video, 0, 0, 640, 480, 10, 10, 160, 120)
+                requestAnimationFrame(video2Canvas)
+            })();
+            var video_stream = new MediaStream()
+            var media_recorder;
+            rec_start.onclick = function () {
+                video.play();
+                var streams = getAudioStream()
+                video_stream.addTrack(canvas.captureStream().getTracks()[0])
+                video_stream.addTrack(streams.getAudioTracks()[0])
+                media_recorder = new MediaRecorder(video_stream)
+                media_recorder.start();
+                media_recorder.ondataavailable = function (e) {
+                    var blob_url = URL.createObjectURL(e.data);
+                    mixed_video.src = blob_url;
+                    btn_download.download = 'mixed.webm';
+                    btn_download.href = blob_url;
+                    document.body.className = "result";
+                }
+            }
+            rec_stop.onclick = function () {
+                video.pause();
+                media_recorder.stop()
+            }
+            function getAudioStream() {
+                var source = audioContext.createMediaElementSource(video);
+                var source2 = audioContext.createMediaStreamSource(camera_stream);
+                var splitter = audioContext.createChannelSplitter(2);
+                source.connect(splitter);
+                var splitter2 = audioContext.createChannelSplitter(2);
+                source2.connect(splitter2);
+                var video_gain_node = audioContext.createGain();
+                var camera_gain_node = audioContext.createGain();
+                video_gain_node.gain.value = 1;
+                camera_gain_node.gain.value = 1;
+                splitter.connect(video_gain_node);
+                splitter2.connect(camera_gain_node);
+                var merger = audioContext.createChannelMerger(4);
+                video_gain_node.connect(merger, 0, 0)
+                camera_gain_node.connect(merger, 0, 0)
+                video_gain_node.connect(audioContext.destination);
+                var dist = audioContext.createMediaStreamDestination()
+                merger.connect(dist);
+                return dist.stream
+            }
+            function onSuccess(data) {
+                data.getAudioTracks().muted = true;
+                camera_stream = data;
+                sub_video.src = URL.createObjectURL(data);
+            }
+            function onFail(err) {
+                console.log(err);
+            }
+        }
+    </script>
+</body>
+
+</html>
