@@ -58,13 +58,13 @@
             })
             downloadbutton.addEventListener('click', function (ev) {
                 console.log(record_data)
-                var blob = new Blob(record_data, { type: 'video/mp4' })
+                var blob = new Blob(record_data, { type: 'video/avi' })
                 var url = window.URL.createObjectURL(blob)
                 var a = document.createElement('a')
                 document.body.appendChild(a)
                 a.style = 'display:none'
                 a.href = url;
-                a.download = 'test.mp4'
+                a.download = 'test.avi'
                 a.click()
                 window.URL.revokeObjectURL(url)
             })

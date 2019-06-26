@@ -6,10 +6,26 @@
     position: absolute;
 }
 
+body{
+    background-image: url("stadium.jpg");
+}
+
 .title .image_index{
-    margin-left: 60%;
-    margin-top:15%;
-    width: 500px;
+    margin-left: 62%;
+    margin-top:12%;
+    /*width: 500px;*/
+    position: absolute;
+}
+
+.title .image_title{
+    margin-left:10%;
+    margin-top:10%;
+    position: absolute;
+}
+
+.title .image_subtitle{
+    margin-left:10%;
+    margin-top:18%;
     position: absolute;
 }
 
@@ -22,10 +38,13 @@
     margin-top: 28%;
     position: absolute;
     padding: 15px;
+    border-radius: 20px;
+    border-bottom: solid 4px #0d7e2a;
 }
 
-.title .link:hover{
-    background-color: rgba(121, 190, 16, 0.726);
+.title .link:active{
+    border-bottom: none;
+    -webkit-transform: translateY(4px);
 }
 
 .tutorial .video1{
@@ -51,7 +70,7 @@ img.link2{
 
 img.link2:hover{
     cursor: pointer;
-    opacity: 0.5;
+    opacity: 0.8;
 }
 
 .camera {
