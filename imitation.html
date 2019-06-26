@@ -50,6 +50,7 @@
             startRecorder()
             // 「start」ボタンをとる挙動を定義
             startbutton.addEventListener('click', function (ev) {
+                console.log("hello")
                 recorder.start()
                 ev.preventDefault()
             }, false);
@@ -58,13 +59,13 @@
             })
             downloadbutton.addEventListener('click', function (ev) {
                 console.log(record_data)
-                var blob = new Blob(record_data, { type: 'video/avi' })
+                var blob = new Blob(record_data, { type: 'video/webm' })
                 var url = window.URL.createObjectURL(blob)
                 var a = document.createElement('a')
                 document.body.appendChild(a)
                 a.style = 'display:none'
                 a.href = url;
-                a.download = 'test.avi'
+                a.download = 'test.webm'
                 a.click()
                 window.URL.revokeObjectURL(url)
             })
@@ -87,7 +88,8 @@
         function startRecorder() {
             navigator.mediaDevices.getUserMedia(constrains)
                 .then(function (stream) {
-                    recorder = new MediaRecorder(stream)
+                    recorder = new MediaRecorder(stream, { mimeType: 'video/webm' })
+                    recorder.mimeType = 'video/webm'
                     recorder.ondataavailable = function (e) {
                         var testvideo = document.getElementById('test')
                         testvideo.style = 'display:none'
